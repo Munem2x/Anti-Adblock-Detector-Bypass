@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Anti-Adblock Detector Bypass
 // @namespace    https://github.com/Max
-// @version      2.0.2
+// @version      2.0.3
+// @icon         https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/icon.svg
 // @updateURL    https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/Anti-Adblock-Detector-Bypass.user.js
 // @downloadURL https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/Anti-Adblock-Detector-Bypass.user.js
 // @description  Neutralises common anti-adblock detectors: native-looking API patches, fake network success for ad URLs, detector-library stubs, bait-element geometry spoofing, keyword wall removal and detector-storage cleanup. Add target hosts in CONFIG.hosts.

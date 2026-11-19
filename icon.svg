@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <path d="M32 4 L54 13 V31 C54 46 45 55 32 60 C19 55 10 46 10 31 V13 Z"
+        fill="#1f2937" stroke="#4b5563" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="20" y="24" width="24" height="12" rx="2" fill="#fbbf24"/>
+  <text x="32" y="33.5" font-family="Arial, Helvetica, sans-serif" font-size="10"
+        font-weight="bold" text-anchor="middle" fill="#111827">AD</text>
+  <line x1="15" y1="49" x2="49" y2="15" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+</svg>
