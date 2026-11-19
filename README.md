@@ -12,8 +12,11 @@ reporting a hit.
 ## Install
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/).
-2. Open `Anti-Adblock-Detector-Bypass.user.js` (raw view) — Tampermonkey offers
-   to install it — or create a new script and paste the file contents.
+2. Install from the raw URL
+   `https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/Anti-Adblock-Detector-Bypass.user.js`
+   — Tampermonkey offers to install it — or create a new script and paste the
+   file contents. The `@updateURL`/`@downloadURL` metadata points at that same
+   file, so Tampermonkey checks the repo for new versions automatically.
 3. Hard-refresh the target site (Ctrl+F5). If a detection flag was stored
    earlier, clear the site's cookies / localStorage or use a private window.
 
