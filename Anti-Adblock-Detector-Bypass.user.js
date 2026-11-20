@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Anti-Adblock Detector Bypass
 // @namespace    https://github.com/Max
-// @version      2.0.3
+// @version      2.0.4
 // @icon         https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/icon.svg
 // @updateURL    https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/Anti-Adblock-Detector-Bypass.user.js
 // @downloadURL https://raw.githubusercontent.com/Munem2x/Anti-Adblock-Detector-Bypass/main/Anti-Adblock-Detector-Bypass.user.js
@@ -99,7 +99,8 @@
       'propellerads\\.com', 'exoclick\\.com', 'adsterra\\.com', 'juicyads\\.com',
       'adskeeper\\.(com|co\\.uk)', 'hilltopads\\.(net|com)', 'a-ads\\.com',
       'clickadu\\.com', 'trafficjunky\\.(net|com)', 'adcash\\.com', 'onclickads\\.net',
-      'highperformanceformat\\.com', 'profitablecpmrate\\.com', 'effectivegatecpmrate\\.com',
+      'highperformanceformat\\.com', 'highrevenueformat\\.com',
+      'profitableratecpmnetwork\\.com', 'profitablecpmrate\\.com', 'effectivegatecpmrate\\.com',
       'monetag\\.com', 'yllix\\.com', 'adsco\\.re', 'ad-maven\\.com',
       'adblockanalytics\\.com', 'scorecardresearch\\.com',
       // anti-adblock / ad-recovery providers
@@ -454,11 +455,11 @@
 
   // -------------------------------------------------------- overlay removal
   const OVERLAY_SEL = [
-    '[class*="adblock"]', '[id*="adblock"]', '[class*="ad-block"]', '[id*="ad-block"]',
-    '[class*="blocker"]', '[id*="blocker"]', '[class*="whitelist"]', '[id*="whitelist"]',
-    '[class*="pleasedisable"]', '[id*="pleasedisable"]', '[class*="adb-overlay"]', '[id*="adb-overlay"]',
-    '[class*="overlay"]', '[id*="overlay"]', '[class*="backdrop"]', '[id*="backdrop"]',
-    '[class*="modal"]', '[id*="modal"]',
+    '[class*="adblock" i]', '[id*="adblock" i]', '[class*="ad-block" i]', '[id*="ad-block" i]',
+    '[class*="blocker" i]', '[id*="blocker" i]', '[class*="whitelist" i]', '[id*="whitelist" i]',
+    '[class*="pleasedisable" i]', '[id*="pleasedisable" i]', '[class*="adb-overlay" i]', '[id*="adb-overlay" i]',
+    '[class*="overlay" i]', '[id*="overlay" i]', '[class*="backdrop" i]', '[id*="backdrop" i]',
+    '[class*="modal" i]', '[id*="modal" i]',
   ].join(',');
   const KEYWORD_RE = /adblock|ad blocker|ad-block|adblocker|disable your (ad|ads|blocker)|disable (your|the) adblock|turn off|whitelist|please disable|allow ads|ads are paying|redirect me|adblock detected|desative|desactiv|bloque|controle de anúncios/i;
 
@@ -504,6 +505,10 @@
       }
     } catch (_) {}
     try {
+      // FreeCoinPay-style marker class set when the detector fires
+      if (document.body) document.body.classList.remove('has-adblock');
+    } catch (_) {}
+    try {
       const candidates = [document.documentElement, document.body]
         .concat(Array.from(document.body ? document.body.querySelectorAll(':scope > *, :scope > * > *') : []));
       for (const el of candidates) {
@@ -538,26 +543,32 @@
     } catch (_) { return false; }
   }
 
+  function collectWallCandidates(scope) {
+    const out = [];
+    const push = (el) => { if (el && el.nodeType === 1) out.push(el); };
+    try {
+      if (!scope || scope === document || scope === document.documentElement || scope === document.body) {
+        document.querySelectorAll(OVERLAY_SEL).forEach(push);
+        // Top-level walls often carry no recognisable id/class (e.g. #abkBar),
+        // so always inspect the body's direct children too.
+        if (document.body) Array.from(document.body.children).forEach(push);
+      } else if (scope.nodeType === 1) {
+        push(scope);
+        scope.querySelectorAll('div,section,aside,span,p,button,a').forEach(push);
+      }
+    } catch (_) {}
+    return out;
+  }
+
   function removeOverlays(root) {
     const scopes = [];
     if (!root) {
       scopes.push(document);
     } else if (root.nodeType === 1) {
       scopes.push(root);
-      try { root.querySelectorAll(OVERLAY_SEL).forEach((n) => scopes.push(n)); } catch (_) {}
     }
     for (const scope of scopes) {
-      const candidates = [];
-      try {
-        if (scope === document || scope === document.documentElement || scope === document.body) {
-          document.querySelectorAll(OVERLAY_SEL).forEach((n) => candidates.push(n));
-        } else if (scope.matches && scope.matches(OVERLAY_SEL)) {
-          candidates.push(scope);
-        } else {
-          scope.querySelectorAll(OVERLAY_SEL).forEach((n) => candidates.push(n));
-        }
-      } catch (_) {}
-      for (const el of candidates) {
+      for (const el of collectWallCandidates(scope)) {
         if (isWallLike(el)) killEl(el, 'wall');
       }
     }

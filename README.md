@@ -61,6 +61,12 @@ hosts: ['*.example.org'],        // subdomain wildcard
   readyState 1–4 requirement.
 - **BlockAdBlock / FuckAdBlock / SniffAdBlock** — stubbed constructors and
   instances.
+- **FreeCoinPay.io** (custom inline detector) — probes three ad-script URLs
+  (`highrevenueformat.com`, `profitableratecpmnetwork.com`, `acdn.adnxs.com`)
+  with `fetch(..., {mode:'no-cors'})` and flags "blocked" only when at least two
+  reject; plus a cosmetic bait (`adsbox ad-unit pub_300x250 …`). Counters:
+  ad-host coverage, geometry spoofing, and wall removal for `#abkBar` /
+  `#abkModal` (note the capital `M` — selectors are matched case-insensitively).
 - **AAB** (`assets/antiadblock.js`) — body-wipe guard plus overlay removal.
 - Generic bait classes (`ad-banner`, `adsbox`, `pub_300x250`, `text-ad`, …) and
   generic keyword walls.
